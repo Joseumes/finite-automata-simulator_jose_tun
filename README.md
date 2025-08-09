@@ -8,4 +8,5 @@ This project loads finite automata from a JSON file, validates them, generates t
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python api/main.py
+python api/app.py 
+
