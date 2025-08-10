@@ -3,7 +3,7 @@ import time
 import json
 from flask import request, jsonify,current_app
 from . import create_app
-from simulator.validator import validate_automaton_schema,validateError
+from simulator.validator import validate_automaton_schema,ValidationError
 from simulator.automaton import Automaton
 from simulator.diagram_generator import DiagramGenerator
 
@@ -46,7 +46,7 @@ def process_automaton():
                     "diagram": diagram_path,
                     "imputs_validation": imputs_validation
                 })
-            except validateError as ve:
+            except ValidationError as ve:
                 results.append({
                     "id": automaton_id,
                     "suscess": False,
