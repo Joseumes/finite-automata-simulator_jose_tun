@@ -8,7 +8,11 @@ from simulator.automaton import Automaton
 from simulator.diagram_generator import DiagramGenerator
 
 
+
 app= create_app()
+
+@app.route('/process_automaton', methods=['POST'])
+
 def process_automaton():
     try:
         if 'file' in request.files:
@@ -20,7 +24,7 @@ def process_automaton():
             if automata_list is None:
                 return jsonify({"error": "Invalid JSON "}),400
         if not isinstance(automata_list, list):
-            return jsonify({"error": "Input should be a list of automata"}),400
+            return jsonify({"error": "Top level must be list of automata"}),400
         results = []
         gen_dir = current_app.config.get('GENERATE_DIR', 'generated_diagram')
         os.makedirs(gen_dir, exist_ok=True)
@@ -32,10 +36,10 @@ def process_automaton():
                 automaton = Automaton.from_dict(automaton_json)
                 timestamp = int(time.time())
                 diagram_path = diagram_generator.generate(automaton,f"automaton_{automaton_id}_{timestamp}")
-                test_string = automaton_json.get('test_string', [])
+                test_strings = automaton_json.get('test_strings', [])
                 imputs_validation=[]
-                for i in test_string:
-                    result=automaton.process_string(i)
+                for i in test_strings:
+                    result=automaton.process_input(i)
                     imputs_validation.append({
                         "input": i,
                         "result": result
@@ -44,13 +48,13 @@ def process_automaton():
                     "id": automaton_id,
                     "suscess": True,
                     "diagram": diagram_path,
-                    "imputs_validation": imputs_validation
+                    "inputs_validation": imputs_validation
                 })
             except ValidationError as ve:
                 results.append({
                     "id": automaton_id,
                     "suscess": False,
-                    "error": str(ve)
+                    "error_description": str(ve)
                 })
             except Exception as e:
                 results.append({

@@ -5,7 +5,7 @@ def _ensure_type(field_name: str, value, expected_type):
     if not isinstance(value, expected_type):
         raise ValidationError(f"Field '{field_name}' must be of type {expected_type.__name__}")
 def validate_automaton_schema(automaton: Dict[str, Any]) -> None:
-    required_fields = ["id", "name", "inicial_state", "aceptance_states", "alphabet", "states", "transitions"]
+    required_fields = ["id", "name", "initial_state", "acceptance_states", "alphabet", "states", "transitions"]
     for field in required_fields:
         if field not in automaton:
             raise ValidationError(f"Missing required field: {field}")
@@ -13,33 +13,34 @@ def validate_automaton_schema(automaton: Dict[str, Any]) -> None:
             raise ValidationError(f"Field '{field}' cannot be Null")
     _ensure_type("id", automaton["id"], str)
     _ensure_type("name", automaton["name"], str)
-    _ensure_type("inicial_state", automaton["inicial_state"], str)
-    _ensure_type("aceptance_states", automaton["aceptance_states"], List)
+    _ensure_type("initial_state", automaton["initial_state"], str)
+    _ensure_type("acceptance_states", automaton["acceptance_states"], List)
     _ensure_type("alphabet", automaton["alphabet"], List)
     _ensure_type("states", automaton["states"], List)
     _ensure_type("transitions", automaton["transitions"], list)
     states= automaton["states"]
     alphabet = automaton["alphabet"]
-    initial= automaton["inicial_state"]
-    acceptance = automaton["aceptance_states"]
+    initial= automaton["initial_state"]
+    acceptance = automaton["acceptance_states"]
     transitions = automaton["transitions"]
     if initial not in states:
-        raise ValidationError(f"Initial state '{initial}' is not in the list of states")
+        raise ValidationError(f"Initial state '{initial}' is not defined list")
 
     for i in acceptance:
         if i not in states:
-            raise ValidationError(f"Acceptance state '{i}' is not in the list of states List")
+            raise ValidationError(f"Acceptance state '{i}' is not defined in states list")
     for i  in alphabet:
         if not isinstance(i, str):
             raise ValidationError(f"Alphabet symbol '{i}' must be a string")
+        
     for i in transitions:
         if not isinstance(i, dict):
             raise ValidationError("Each transition must be a dictionary")
         for key in ["from_state", "symbol", "to_state"]:
             if key not in i:
-                raise ValidationError(f"Transition is missing required field: {key}")
+                raise ValidationError(f"Transition is missing key: {key}")
             if i[key] is None:
-                raise ValidationError(f"Transition  '{key}' cannot be Null")
+                raise ValidationError(f"Transition  '{key}' value cannot be Null")
         if i["from_state"] not in states:
             raise ValidationError(f"Transition 'from_state' '{i['from_state']}' is not in the list of states")
         if i["to_state"] not in states:
@@ -55,7 +56,7 @@ def validate_automaton_schema(automaton: Dict[str, Any]) -> None:
         if missing_symbols:
             missing.append((i, missing_symbols))
     if missing:
-        details = ", ".join(f"State '{state}' is missing symbols:{m}" for state, m in missing)
+        details = ", ".join(f"State '{state}' is missing symbols:{m}" for state ,m in missing)
         raise ValidationError(f"Some states are missing symbols from the alphabet: {details}")
     return
 
