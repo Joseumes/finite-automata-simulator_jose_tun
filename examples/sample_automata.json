@@ -1,19 +1,5 @@
-[
-  {
-    "id": "automata_1",
-    "name": "Even number of zeros recognizer",
-    "initial_state": "",
-    "acceptance_states": ["q0"],
-    "alphabet": ["0","1"],
-    "states": ["q0","1"],
-    "transitions": [
-      { "from_state": "q0", "symbol": "0", "to_state": "q1" },
-      { "from_state": "q0", "symbol": "1", "to_state": "q0" },
-      { "from_state": "q1", "symbol": "0", "to_state": "q0" },
-      { "from_state": "q1", "symbol": "1", "to_state": "q1" }
-    ],
-    "test_strings": ["", "0", "1", "10", "1010", "001"]
-  },
+
+ [
   {
     "id": "automata_2",
     "name": "Binary strings ending with 1",
@@ -22,11 +8,10 @@
     "alphabet": ["0","1"],
     "states": ["q0","q1"],
     "transitions": [
-      { "from_state": "q0", "symbol": "0", "to_state": "q0" },
-      { "from_state": "q0", "symbol": "1", "to_state": "q1" },
-      { "from_state": "q1", "symbol": "0", "to_state": "q0" },
-      { "from_state": "q1", "symbol": "1", "to_state": "q1" }
+      { "from_state": "q0", "symbol": "1", "to_state": "q0" },
+      { "from_state": "q0", "symbol": "0", "to_state": "q1" },
+      { "from_state": "q1", "symbol": "1", "to_state": "q0" },
+      { "from_state": "q1", "symbol": "0", "to_state": "q1" }
     ],
-    "test_strings": ["", "0", "1", "101", "100"]
-  }
-]
+     "test_strings": ["0", "10", "101", "1010", ""]
+  }]

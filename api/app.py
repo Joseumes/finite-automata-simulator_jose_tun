@@ -39,10 +39,19 @@ def process_automaton():
                 test_strings = automaton_json.get('test_strings', [])
                 imputs_validation=[]
                 for i in test_strings:
+                    if not all(char in automaton.alphabet for char in i ):
+
+                        result=automaton.process_input(i)
+                        imputs_validation.append({
+                            "input": i,
+                            "result": result,
+                            "error": "Input contains symbols not in the alphabet"
+                        })
+                        continue
                     result=automaton.process_input(i)
                     imputs_validation.append({
                         "input": i,
-                        "result": result
+                        "result": result,
                     })
                 results.append({
                     "id": automaton_id,
